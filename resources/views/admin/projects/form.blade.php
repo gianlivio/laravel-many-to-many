@@ -53,6 +53,24 @@
                 </div>
             @enderror
         </div>
+
+        {{-- Technology Input --}}
+        <div class="col-12">
+            <label for="technology_id" class="form-label">Technology</label>
+            <select class="form-control @error('technology_id') is-invalid @enderror" id="technology_id" name="technology_id">
+                <option value="">Seleziona una tecnologia</option>
+                @foreach($technologies as $technology)
+                    <option value="{{ $technology->id }}" {{ (old('technology_id') ?? $project->technology_id ?? '') == $technology->id ? 'selected' : '' }}>
+                        {{ $technology->name }}
+                    </option>
+                @endforeach
+            </select>
+            @error('technology_id')
+                <div class="alert alert-danger mt-1">
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
     </div>
 
     <hr class="my-4">

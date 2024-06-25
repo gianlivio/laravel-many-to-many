@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\Type;
+use App\Models\Technology; 
 use App\Http\Requests\StoreProjectRequest;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -26,7 +27,8 @@ class ProjectController extends Controller
     public function create()
     {
         $types = Type::all();
-        return view('admin.projects.create', compact('types'));
+        $technologies = Technology::all();
+        return view('admin.projects.create', compact('types', 'technologies'));
     }
     /**
      * Store a newly created resource in storage.
@@ -39,6 +41,8 @@ class ProjectController extends Controller
         $newProject->fill($projectData);
         $newProject->slug = Str::slug($newProject->name, '_');
         $newProject->save();
+
+        $newProject->technologies()->sync($request->technologies);
 
         return redirect()->route('admin.projects.index')->with('success', 'Project created successfully');
 
@@ -60,7 +64,8 @@ class ProjectController extends Controller
     {
         $project = Project::findOrFail($id);
         $types = Type::all();
-        return view('admin.projects.edit', compact('project', 'types'));
+        $technologies = Technology::all();
+        return view('admin.projects.edit', compact('project', 'types', 'technologies'));
     }
 
     /**
@@ -72,6 +77,8 @@ class ProjectController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'type_id' => 'nullable|exists:types,id',
+            'technologies' => 'array',
+            'technologies.*' => 'exists:technologies,id'
         ]);
 
         $project = Project::findOrFail($id);
@@ -79,6 +86,8 @@ class ProjectController extends Controller
         $project->fill($projectData);
         $project->slug = Str::slug($project->name, '_');
         $project->save();
+
+        $project->technologies()->sync($request->technologies);
 
         return redirect()->route('admin.projects.index')->with('success', 'Project updated successfully');
     }
