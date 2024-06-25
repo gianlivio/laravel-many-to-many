@@ -15,10 +15,22 @@
                         <p><strong>Description:</strong> {{ $project->description }}</p>
                         <p><strong>Tipologia:</strong> {{ $project->type ? $project->type->name : 'Nessuna' }}</p>
                         <p><strong>Slug:</strong> {{ $project->slug }}</p>
-                    </div>
-                    <a href="{{ route('admin.projects.edit', $project->id) }}" class="btn btn-primary">Modifica</a>
-                    <a href="{{ route('admin.projects.index') }}" class="btn btn-secondary">Indietro</a>
 
+                        @if($project->technologies->isNotEmpty())
+                            <p><strong>Technologies Used:</strong></p>
+                            <ul>
+                                @foreach($project->technologies as $technology)
+                                    <li>{{ $technology->name }}</li>
+                                @endforeach
+                            </ul>
+                        @else
+                            <p><strong>Technologies Used:</strong> None</p>
+                        @endif
+                    </div>
+                    <div class="card-footer">
+                        <a href="{{ route('admin.projects.edit', $project->id) }}" class="btn btn-primary">Modifica</a>
+                        <a href="{{ route('admin.projects.index') }}" class="btn btn-secondary">Indietro</a>
+                    </div>
                 </div>
             </div>
         </div>
