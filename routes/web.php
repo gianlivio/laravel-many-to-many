@@ -10,13 +10,12 @@ Route::get('/', function () {
 });
 
 Route::middleware('auth')
-    ->prefix('admin') // Prefisso nell'url delle rotte di questo gruppo
-    ->name('admin.') // inizio di ogni nome delle rotte del gruppo
+    ->prefix('admin')
+    ->name('admin.')
     ->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-        Route::resource('projects', ProjectController::class);
-        Route::resource('types', TypeController::class);
-        Route::resource('technologies', TechnologyController::class);
+        Route::resource('projects', \App\Http\Controllers\Admin\ProjectController::class);
+        Route::resource('technologies', \App\Http\Controllers\Admin\TechnologyController::class);
     });
 
 require __DIR__ . '/auth.php';

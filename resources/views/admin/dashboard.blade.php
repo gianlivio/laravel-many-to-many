@@ -8,6 +8,7 @@
                     <div class="card-header">{{ __('Dashboard') }}</div>
                     <a href="{{ route('admin.projects.index') }}" class="btn btn-primary">Vai ai Progetti</a>
                     
+                    
                 </div>
                     
 
