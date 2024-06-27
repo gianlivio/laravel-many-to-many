@@ -16,6 +16,7 @@ Route::middleware('auth')
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::resource('projects', \App\Http\Controllers\Admin\ProjectController::class);
         Route::resource('technologies', \App\Http\Controllers\Admin\TechnologyController::class);
+        Route::resource('types', \App\Http\Controllers\Admin\TypeController::class);
     });
 
 require __DIR__ . '/auth.php';

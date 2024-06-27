@@ -4,7 +4,9 @@
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-3">
 
-            <a href="{{ route('admin.projects.create') }}" class="btn btn-primary">Add Project</a>
+            <div>
+                <a href="{{ route('admin.types.create') }}" class="btn btn-primary">Add Type</a>
+            </div>
         </div>
         <div class="card">
             <div class="card-body">
@@ -12,19 +14,20 @@
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Description</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($projectsArray as $project)
+                        @foreach ($types as $type)
                             <tr>
-                                <td>{{ $project->name }}</td>
+                                <td>{{ $type->name }}</td>
+                                <td>{{ $type->description }}</td>
                                 <td>
-                                    <a href="{{ route('admin.projects.show', $project->id) }}"
-                                        class="btn btn-info btn-sm">View</a>
-                                    <a href="{{ route('admin.projects.edit', $project->id) }}"
+                                    <a href="{{ route('admin.types.show', $type->id) }}" class="btn btn-info btn-sm">View</a>
+                                    <a href="{{ route('admin.types.edit', $type->id) }}"
                                         class="btn btn-warning btn-sm">Edit</a>
-                                    <form action="{{ route('admin.projects.destroy', $project->id) }}" method="POST"
+                                    <form action="{{ route('admin.types.destroy', $type->id) }}" method="POST"
                                         class="d-inline">
                                         @csrf
                                         @method('DELETE')

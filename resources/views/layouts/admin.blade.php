@@ -75,6 +75,12 @@
                   <i class="fa-solid fa-microchip fa-lg fa-fw"></i> Technologies
                 </a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link text-white {{ Route::currentRouteName() == 'admin.technologies.index' ? 'bg-secondary' : '' }}"
+                  href="{{ route('admin.types.index') }}">
+                  <i class="fa-solid fa-microchip fa-lg fa-fw"></i> Types
+                </a>
+              </li>
             </ul>
 
 

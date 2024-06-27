@@ -85,6 +85,9 @@ class ProjectController extends Controller
             'technologies.*' => 'exists:technologies,id'
         ]);
 
+        // Trova il progetto
+        $project = Project::findOrFail($id);
+
         // Genera lo slug
         $validatedData['slug'] = Str::slug($request->name);
 
