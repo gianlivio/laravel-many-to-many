@@ -15,10 +15,27 @@ class ProjectController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $projectsArray = Project::all();
-        return view('admin.projects.index', compact('projectsArray'));
+        $query = Project::query();
+
+        // Filtra per tipo
+        if ($request->filled('type_id')) {
+            $query->where('type_id', $request->type_id);
+        }
+
+        // Filtra per tecnologia
+        if ($request->filled('technology_id')) {
+            $query->whereHas('technologies', function ($q) use ($request) {
+                $q->where('technologies.id', $request->technology_id);
+            });
+        }
+
+        $projectsArray = $query->get();
+        $types = Type::all();
+        $technologies = Technology::all();
+
+        return view('admin.projects.index', compact('projectsArray', 'types', 'technologies'));
     }
 
     /**
@@ -30,6 +47,7 @@ class ProjectController extends Controller
         $technologies = Technology::all();
         return view('admin.projects.create', compact('types', 'technologies'));
     }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -101,11 +119,10 @@ class ProjectController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
-    { {
-            $project = Project::findOrFail($id);
-            $project->delete();
+    {
+        $project = Project::findOrFail($id);
+        $project->delete();
 
-            return redirect()->route('admin.projects.index')->with('success', 'Project deleted successfully');
-        }
+        return redirect()->route('admin.projects.index')->with('success', 'Project deleted successfully');
     }
 }
