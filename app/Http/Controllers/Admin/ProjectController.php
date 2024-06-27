@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\Type;
-use App\Models\Technology; 
+use App\Models\Technology;
 use App\Http\Requests\StoreProjectRequest;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -35,17 +35,21 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request)
     {
-        $projectData = $request->validated();
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'type_id' => 'nullable|exists:types,id',
+            'technologies' => 'array',
+            'technologies.*' => 'exists:technologies,id'
+        ]);
 
-        $newProject = new Project();
-        $newProject->fill($projectData);
-        $newProject->slug = Str::slug($newProject->name, '_');
-        $newProject->save();
+        // Genera lo slug
+        $validatedData['slug'] = Str::slug($request->name);
 
-        $newProject->technologies()->sync($request->technologies);
+        $project = Project::create($validatedData);
+        $project->technologies()->sync($request->technologies);
 
-        return redirect()->route('admin.projects.index')->with('success', 'Project created successfully');
-
+        return redirect()->route('admin.projects.index')->with('success', 'Project created successfully.');
     }
 
     /**
@@ -73,23 +77,21 @@ class ProjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'required|string',
+            'description' => 'nullable|string',
             'type_id' => 'nullable|exists:types,id',
             'technologies' => 'array',
             'technologies.*' => 'exists:technologies,id'
         ]);
 
-        $project = Project::findOrFail($id);
-        $projectData = $request->all();
-        $project->fill($projectData);
-        $project->slug = Str::slug($project->name, '_');
-        $project->save();
+        // Genera lo slug
+        $validatedData['slug'] = Str::slug($request->name);
 
+        $project->update($validatedData);
         $project->technologies()->sync($request->technologies);
 
-        return redirect()->route('admin.projects.index')->with('success', 'Project updated successfully');
+        return redirect()->route('admin.projects.index')->with('success', 'Project updated successfully.');
     }
 
     /**
